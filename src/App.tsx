@@ -1,10 +1,9 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 import NavBar from "./Components/NavBar/NavBar";
-import EmployeeCell from "./Components/HomePage/EmployeeCells/EmployeeCell";
 import { AllEmployeesPage } from "./Components/HomePage/AllEmployeesPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { EmployeePage } from "./Components/EmployeeForms/EmployeePage";
 
 function App() {
   return (
@@ -15,9 +14,23 @@ function App() {
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
         crossOrigin="anonymous"
       />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      ></link>
       <body>
         <NavBar />
-        <AllEmployeesPage />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<AllEmployeesPage />} />
+          </Routes>
+          <Routes>
+            <Route
+              path="/employee/:employeed?/:employeeName?"
+              element={<EmployeePage />}
+            />
+          </Routes>
+        </BrowserRouter>
       </body>
     </html>
   );

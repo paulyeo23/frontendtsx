@@ -6,6 +6,7 @@ import "../../../index.css";
 export const EmployeeCellContainer: React.FC<{
   employeeData?: employeeData[];
 }> = ({ employeeData }) => {
+  console.log(employeeData);
   interface renderType {
     singleColumn: React.ReactElement[];
     doubleColumn: React.ReactElement[];
@@ -21,20 +22,32 @@ export const EmployeeCellContainer: React.FC<{
   }
 
   for (let i = 0; i < cells.length; i++) {
+    const previousCell = cells[i - 1];
     const currentCell = cells[i];
     const nextCell = cells[i + 1];
     render.singleColumn.push(<Row>{currentCell}</Row>);
-    if (nextCell == undefined && currentCell != undefined) {
+    if (nextCell == undefined) {
+      if (i % 2 == 1) {
+        render.doubleColumn.push(
+          <Row>
+            <Col>{previousCell}</Col>
+            <Col>{currentCell}</Col>
+          </Row>
+        );
+      } else {
+        render.doubleColumn.push(
+          <Row>
+            <Col>{currentCell}</Col>
+            <Col></Col>
+          </Row>
+        );
+      }
+      break;
+    } else if (i % 2 == 1) {
       render.doubleColumn.push(
         <Row>
+          <Col>{previousCell}</Col>
           <Col>{currentCell}</Col>
-        </Row>
-      );
-    } else if ((i + 1) % 2 == 1) {
-      render.doubleColumn.push(
-        <Row>
-          <Col>{currentCell}</Col>
-          <Col>{nextCell}</Col>
         </Row>
       );
     }
@@ -42,10 +55,10 @@ export const EmployeeCellContainer: React.FC<{
 
   return (
     <div className="employee-cells">
-      <Container className="employee-containers mobile-true">
+      <Container className="employee-cell-container mobile-true">
         {render.singleColumn}
       </Container>
-      <Container className=" employee-containers mobile-false">
+      <Container className=" employee-cell-container mobile-false">
         {render.doubleColumn}
       </Container>
     </div>

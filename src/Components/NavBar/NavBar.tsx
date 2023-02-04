@@ -1,16 +1,17 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
 import "./NavBar.css";
 import "./Circle.css";
-import { useDispatch, useSelector } from "react-redux";
 // import { updateEmployeeList } from "../../store/employees";
-import { employeeList } from "../../Interfaces/interfaces";
 import { useEffect } from "react";
-import employees, { getAllEmployees } from "../../store/employees";
+import { getAllEmployees } from "../../store/employeeCrud";
 import { useAppDispatch } from "../../store/hooks";
+import { setCurrentPage } from "../../store/pages";
 const NavBar: React.FC = () => {
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(getAllEmployees());
+    dispatch(setCurrentPage(1));
   }, []);
 
   return (
@@ -21,7 +22,7 @@ const NavBar: React.FC = () => {
             <h2 className="float-left">Employees</h2>
           </Col>
           <Col className="float-right">
-            <a href="">
+            <a href="/employee">
               <Button className="navButton mobile-false float-end ">
                 <Container className="">
                   <Row>

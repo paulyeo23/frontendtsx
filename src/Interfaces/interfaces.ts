@@ -33,20 +33,38 @@ export interface errorMessage {
 }
 
 export interface responseData {
-  employees: employeeList["employees"] | undefined;
-  employee: employeeData | undefined;
-  errorMessage: string | undefined;
+  employees?: employeeList["employees"];
+  employee?: employeeData;
+  errorMessage?: string;
+  departments?: { department: newEmployeeData["department"] }[];
 }
 
-export interface state extends Omit<employeeList, "employees"> {
-  employees: employeeData[] | undefined;
-  isLoading: boolean;
-  status: number | undefined;
-  errorMessage: string | undefined;
+export interface allStates {
+  employees: {
+    response?: AxiosResponse<responseData>;
+    isLoading: boolean;
+  };
+  departments: {
+    response?: AxiosResponse<responseData>;
+    isLoading: boolean;
+  };
+  singleEmployee: {
+    response?: AxiosResponse<responseData>;
+    isLoading: boolean;
+  };
+  deleteEmployee: {
+    response?: AxiosResponse<responseData>;
+    isLoading: boolean;
+  };
+}
+
+export interface pageState {
+  currentPage: number;
 }
 
 export interface reducer {
-  allEmployees: state;
+  employeeCrud: allStates;
+  pageState: pageState;
 }
 
 export interface crud {

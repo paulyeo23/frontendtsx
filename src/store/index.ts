@@ -1,29 +1,33 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
-import employees from "./employees";
+import employees from "./employeeCrud";
+import pages from "./pages";
 
 const reducer = combineReducers({
-  allEmployees: employees,
+  employeeCrud: employees,
+  pageState: pages,
 });
 
 const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types
-        ignoredActions: [
-          "your/action/type",
-          "http://localhost:3000/employee/fulfilled",
-        ],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: [
-          "meta.arg",
-          "payload.headers",
-          "payload.config.transformRequest.0",
-        ],
-        // Ignore these paths in the state
-        ignoredPaths: ["payload.headers", "payload.config.transformRequest.0"],
-      },
+      serializableCheck: false,
+      // serializableCheck: {
+      //   // Ignore these action types
+      //   ignoredActions: [
+      //     "your/action/type",
+      //     "http://localhost:3001/employee/fulfilled",
+      //     "/get/fulfilled",
+      //   ],
+      //   // Ignore these field paths in all actions
+      //   ignoredActionPaths: [
+      //     "meta.arg",
+      //     "payload.headers",
+      //     "payload.config.transformRequest.0",
+      //   ],
+      //   // Ignore these paths in the state
+      //   ignoredPaths: ["payload.headers", "payload.config.transformRequest.0"],
+      // },
     }),
   reducer,
 });
