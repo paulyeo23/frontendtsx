@@ -1,54 +1,34 @@
-import { useEffect, useState } from "react";
-import { Show } from "react-admin";
 import { Container, Row, Col } from "react-bootstrap";
-import { redirect, useNavigate } from "react-router-dom";
-import { employeeData, newEmployeeData } from "../../../Interfaces/interfaces";
+
+import { employeeData } from "../../../Interfaces/interfaces";
+import { useAppDispatch } from "../../../store/hooks";
+import { showEmployeeModal } from "../../../store/pages";
+
 import "./employeeCell.css";
-import { EmployeeDetailsModal } from "./EmployeeModal";
 
 const EmployeeCell: React.FC<{
   employee: employeeData;
 }> = ({ employee }) => {
-  const [ShowState, setShowState] = useState(false);
-
-  const [RenderModal, setRenderModal] = useState(<div></div>);
-
   const nameToUrl = (name: string) => {
     name = name.replace(/\W+(?!$)/g, "-").toLowerCase();
     return name;
   };
 
-  // const restartShowState = () => {
-  //   setShowState(false);
-  //   setTimeout(() => {
-  //     setShowState(true);
-  //   }, 10);
-  // };
-
-  const Modal = (
-    <EmployeeDetailsModal {...{ employee: employee, show: true }} />
-  );
-
-  useEffect(() => {
-    setRenderModal(ShowState == true ? Modal : <div></div>);
-  }, [ShowState]);
+  const dispatch = useAppDispatch();
 
   return (
     <div>
-      {RenderModal}
       <Container className="employee-cell">
         <Row>
           <div className="float-start fa">
             <h2
               className="employee-name"
               onClick={() => {
-                setRenderModal(
-                  <EmployeeDetailsModal
-                    {...{
-                      employee: employee,
-                      dateTime: new Date(),
-                    }}
-                  />
+                dispatch(
+                  showEmployeeModal({
+                    employeeData: employee,
+                    modalType: "employeeDetail",
+                  })
                 );
               }}
             >
@@ -68,7 +48,17 @@ const EmployeeCell: React.FC<{
                 </a>
               </Col>
               <Col>
-                <i className="fa fa-trash-o" />
+                <i
+                  className="fa fa-trash-o"
+                  onClick={() => {
+                    dispatch(
+                      showEmployeeModal({
+                        employeeData: employee,
+                        modalType: "deleteEmployee",
+                      })
+                    );
+                  }}
+                />
               </Col>
             </Row>
           </Col>

@@ -6,7 +6,6 @@ import "../../../index.css";
 export const EmployeeCellContainer: React.FC<{
   employeeData?: employeeData[];
 }> = ({ employeeData }) => {
-  console.log(employeeData);
   interface renderType {
     singleColumn: React.ReactElement[];
     doubleColumn: React.ReactElement[];

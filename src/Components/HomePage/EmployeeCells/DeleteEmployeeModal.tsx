@@ -1,34 +1,83 @@
-import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { employeeData, newEmployeeData } from "../../../Interfaces/interfaces";
+import { useSelector } from "react-redux";
+import { redirect } from "react-router-dom";
+import {
+  allStates,
+  employeeData,
+  newEmployeeData,
+  pageState,
+  reducer,
+} from "../../../Interfaces/interfaces";
+import { useAppDispatch } from "../../../store/hooks";
+import { hideEmployeeModal } from "../../../store/pages";
+import { deleteEmployee } from "../../../store/employeeCrud";
 
-export const DeleteEmployee: React.FC<{
-  employee: employeeData | newEmployeeData;
+export const DeleteEmployeeModal: React.FC<{
+  employee?: employeeData | newEmployeeData;
   dateTime?: Date;
-}> = ({ dateTime = new Date() }) => {
-  const [ShowState, setShowState] = useState(false);
+}> = ({}) => {
+  const { employeeDetailModal }: pageState = useSelector((reducer: reducer) => {
+    return reducer.pageState;
+  });
+
+  const deleteState: allStates["deleteEmployee"] = useSelector(
+    (reducer: reducer) => {
+      return reducer.employeeCrud;
+    }
+  ).deleteEmployee;
+
+  const { employeeData, showModal } = employeeDetailModal;
+
   useEffect(() => {
-    setShowState(true);
-  }, [dateTime]);
+    console.log(deleteState);
+    if (deleteState.response != undefined) {
+      if (deleteState.response.status == 204) {
+        alert(`Successfully deleted`);
+        window.location.reload();
+      } else {
+        alert(
+          `Error ${deleteState.response.status} : ${deleteState.response.data.errorMessage}`
+        );
+      }
+    }
+  }, [deleteState]);
+
+  const dispatch = useAppDispatch();
   return (
     <Modal
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      show={ShowState}
-      onHide={() => setShowState(false)}
+      show={showModal.deleteEmployee}
+      onHide={() => {
+        dispatch(hideEmployeeModal());
+      }}
     >
       <Modal.Header closeButton={true}>
-        <Modal.Title id="employee-modal-title-vcenter">
-          Employee Details
-        </Modal.Title>
+        <Modal.Title id="employee-modal-title-vcenter">Confirm</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Container></Container>
+        <p>{`Remove ${employeeData.name}`}</p>
       </Modal.Body>
-      <Modal.Footer></Modal.Footer>
+      <Modal.Footer>
+        <Button
+          onClick={() => {
+            dispatch(hideEmployeeModal());
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          className="bg-danger"
+          onClick={() => {
+            dispatch(deleteEmployee(employeeData.id));
+          }}
+        >
+          Delete
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

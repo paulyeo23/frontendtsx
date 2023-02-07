@@ -10,10 +10,10 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Pages from "./Pagination";
 import { EmployeeCellContainer } from "./EmployeeCells/EmployeeCellContainer";
-import { useAppDispatch } from "../../store/hooks";
+import { DeleteEmployeeModal } from "./EmployeeCells/DeleteEmployeeModal";
+import { EmployeeDetailsModal } from "./EmployeeCells/EmployeeModal";
 
 export const AllEmployeesPage = () => {
-  const [State, setState] = useState<allStates>();
   const [Render, setRender] = useState<JSX.Element>(<div></div>);
 
   const state: allStates = useSelector((reducer: reducer) => {
@@ -26,22 +26,18 @@ export const AllEmployeesPage = () => {
 
   const employees = state.employees;
 
-  console.log(employees);
-
   useEffect(() => {
-    setState(state);
-    if (
-      employees.response != undefined &&
-      employees.response.data.employees != undefined
-    ) {
-      const employeeCcell = employees.response.data.employees.slice(
+    if (employees.response?.data.employees != undefined) {
+      const employeeCell = employees.response.data.employees.slice(
         (pageState.currentPage - 1) * 10,
         pageState.currentPage * 10
       );
 
       setRender(
         <div>
-          <EmployeeCellContainer employeeData={employeeCcell} />
+          <EmployeeDetailsModal />
+          <DeleteEmployeeModal />
+          <EmployeeCellContainer employeeData={employeeCell} />
           <Pages employeeCount={employees.response.data.employees.length} />
         </div>
       );

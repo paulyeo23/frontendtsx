@@ -9,8 +9,10 @@ const Pages: React.FC<{ employeeCount: number }> = ({ employeeCount }) => {
     return reducer.pageState;
   });
 
-  const maxPages = Math.floor(employeeCount / 10) + 1;
+  const maxPages = Math.ceil(employeeCount / 10) - 1;
   const minPages = 1;
+
+  console.log(maxPages);
 
   const dispatch = useAppDispatch();
 

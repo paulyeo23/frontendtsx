@@ -60,19 +60,16 @@ export interface allStates {
 
 export interface pageState {
   currentPage: number;
+  employeeDetailModal: {
+    employeeData: employeeData;
+    showModal: {
+      employeeDetail: boolean;
+      deleteEmployee: boolean;
+    };
+  };
 }
 
 export interface reducer {
   employeeCrud: allStates;
   pageState: pageState;
-}
-
-export interface crud {
-  getAllEmployees: () => Promise<AxiosResponse<responseData>>;
-  getOneEmployee: (id: number) => Promise<AxiosResponse<responseData>>;
-  createEmployee: (
-    form: newEmployeeData
-  ) => Promise<AxiosResponse<responseData>>;
-  updateEmployee: (form: employeeData) => Promise<AxiosResponse<responseData>>;
-  deleteEmployee: (id: number) => Promise<AxiosResponse<responseData>>;
 }
