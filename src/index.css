@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.modal-hide {
+  visibility: hidden;
+}
+
 @media (max-width: 600px) {
   .mobile-false {
     visibility: hidden;

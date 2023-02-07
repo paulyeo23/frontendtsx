@@ -26,6 +26,8 @@ export const AllEmployeesPage = () => {
 
   const employees = state.employees;
 
+  console.log(employees);
+
   useEffect(() => {
     setState(state);
     if (

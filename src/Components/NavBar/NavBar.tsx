@@ -19,7 +19,9 @@ const NavBar: React.FC = () => {
       <Container>
         <Row>
           <Col>
-            <h2 className="float-left">Employees</h2>
+            <a href="/">
+              <h2 className="float-left">Employees</h2>
+            </a>
           </Col>
           <Col className="float-right">
             <a href="/employee">

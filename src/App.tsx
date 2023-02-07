@@ -26,7 +26,7 @@ function App() {
           </Routes>
           <Routes>
             <Route
-              path="/employee/:employeed?/:employeeName?"
+              path="/employee/:employeeId?/:employeeName?"
               element={<EmployeePage />}
             />
           </Routes>
