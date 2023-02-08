@@ -31,7 +31,6 @@ export const DeleteEmployeeModal: React.FC<{
   const { employeeData, showModal } = employeeDetailModal;
 
   useEffect(() => {
-    console.log(deleteState);
     if (deleteState.response != undefined) {
       if (deleteState.response.status == 204) {
         alert(`Successfully deleted`);
