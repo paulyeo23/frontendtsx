@@ -18,14 +18,9 @@ export interface errormessage {
   errormessage: string;
 }
 
-// export interface newEmployeeData extends newEmployeeData {
-//   name: HTMLInputElement & string;
-//   department: HTMLInputElement & string;
-//   salary: HTMLInputElement & number;
-// }
-
-export interface employeeForm extends newEmployeeData {
-  id: number;
+export interface employeeForm extends Omit<newEmployeeData, "department"> {
+  id?: number;
+  departmentId: number;
 }
 
 export interface errorMessage {
@@ -33,13 +28,18 @@ export interface errorMessage {
 }
 
 export interface responseData {
+  token?: string;
   employees?: employeeList["employees"];
   employee?: employeeData;
   errorMessage?: string;
-  departments?: { department: newEmployeeData["department"] }[];
+  departments?: { id: number; department: string }[];
 }
 
-export interface allStates {
+export interface dataStates {
+  login: {
+    response?: AxiosResponse<responseData>;
+    isLoading: boolean;
+  };
   employees: {
     response?: AxiosResponse<responseData>;
     isLoading: boolean;
@@ -70,6 +70,7 @@ export interface pageState {
 }
 
 export interface reducer {
-  employeeCrud: allStates;
+  employeeCrud: dataStates;
   pageState: pageState;
+  token: { token: string };
 }

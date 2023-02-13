@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { useSelector } from "react-redux";
 import { redirect } from "react-router-dom";
 import {
-  allStates,
+  dataStates,
   employeeData,
   newEmployeeData,
   pageState,
@@ -22,7 +22,7 @@ export const DeleteEmployeeModal: React.FC<{
     return reducer.pageState;
   });
 
-  const deleteState: allStates["deleteEmployee"] = useSelector(
+  const deleteState: dataStates["deleteEmployee"] = useSelector(
     (reducer: reducer) => {
       return reducer.employeeCrud;
     }
@@ -33,15 +33,16 @@ export const DeleteEmployeeModal: React.FC<{
   useEffect(() => {
     if (deleteState.response != undefined) {
       if (deleteState.response.status == 204) {
+        console.log(deleteState.response);
         alert(`Successfully deleted`);
         window.location.reload();
-      } else {
+      } else if (deleteState.response?.status != undefined) {
         alert(
           `Error ${deleteState.response.status} : ${deleteState.response.data.errorMessage}`
         );
       }
     }
-  }, [deleteState]);
+  }, [deleteState.response]);
 
   const dispatch = useAppDispatch();
   return (

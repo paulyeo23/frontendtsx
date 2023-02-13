@@ -2,28 +2,36 @@ import {
   employeeForm,
   newEmployeeData,
   responseData,
-  allStates,
+  dataStates,
 } from "../Interfaces/interfaces";
 import axios, { AxiosResponse } from "axios";
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { reducer } from "../Interfaces/interfaces";
 
-const BACKEND_URL: string = "http://localhost:3000";
+export const BACKEND_URL: string = "http://localhost:3000";
 
 /////////// crud Functions //////////
 
-export const getAllEmployees = createAsyncThunk("/get", async () => {
-  const employees = await axios<responseData>({
-    method: "get",
-    url: BACKEND_URL + "/employee",
-  });
-  const departments = await axios<responseData>({
-    method: "get",
-    url: BACKEND_URL + "/departments",
-  });
-  return { employees: employees, departments: departments };
-});
+export const getAllEmployees = createAsyncThunk(
+  "/get",
+  async (token: string = "") => {
+    const employees = await axios<responseData>({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method: "get",
+      url: BACKEND_URL + "/employee",
+    });
+    const departments = await axios<responseData>({
+      method: "get",
+      url: BACKEND_URL + "/departments",
+    });
+    return { employees: employees, departments: departments };
+  }
+);
 
 export const getOneEmployee = createAsyncThunk("/get", async (id: number) => {
   const response = await axios<responseData>({
@@ -35,7 +43,7 @@ export const getOneEmployee = createAsyncThunk("/get", async (id: number) => {
 
 export const createEmployee = createAsyncThunk(
   "/create",
-  async (form: newEmployeeData): Promise<AxiosResponse<responseData>> => {
+  async (form: employeeForm): Promise<AxiosResponse<responseData>> => {
     return await axios({
       method: "post",
       url: BACKEND_URL + "/employee",
@@ -69,7 +77,8 @@ export const deleteEmployee = createAsyncThunk(
 /////////// state Functions //////////
 const loading = { response: undefined, isLoading: true };
 
-const initialState: allStates = {
+const initialState: dataStates = {
+  login: { response: undefined, isLoading: false },
   employees: { response: undefined, isLoading: false },
   departments: { response: undefined, isLoading: false },
   singleEmployee: { response: undefined, isLoading: false },
@@ -77,20 +86,20 @@ const initialState: allStates = {
 };
 
 const reloadState = (
-  state: allStates,
+  state: dataStates,
   stateType: "employees" | "departments" | "singleEmployee" | "deleteEmployee"
-): allStates => {
+): dataStates => {
   state[stateType] = loading;
   return state;
 };
 
 const endLoadingEmployees = (
-  state: allStates,
+  state: dataStates,
   response: {
     employees: AxiosResponse<responseData>;
     departments: AxiosResponse<responseData>;
   }
-): allStates => {
+): dataStates => {
   state.employees = {
     response: response.employees,
     isLoading: false,
@@ -104,9 +113,9 @@ const endLoadingEmployees = (
 };
 
 const endLoadingSingleEmployee = (
-  state: allStates,
+  state: dataStates,
   response: AxiosResponse<responseData>
-): allStates => {
+): dataStates => {
   state.singleEmployee = {
     response: response,
     isLoading: false,
@@ -117,9 +126,9 @@ const endLoadingSingleEmployee = (
 };
 
 const endDeleteEmployee = (
-  state: allStates,
+  state: dataStates,
   response: AxiosResponse<responseData>
-): allStates => {
+): dataStates => {
   state.deleteEmployee = {
     response: response,
     isLoading: false,

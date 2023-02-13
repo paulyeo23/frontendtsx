@@ -1,3 +1,5 @@
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import employees from "./employeeCrud";
@@ -29,7 +31,7 @@ const store = configureStore({
       //   ignoredPaths: ["payload.headers", "payload.config.transformRequest.0"],
       // },
     }),
-  reducer,
+  reducer: reducer,
 });
 
 export default store;

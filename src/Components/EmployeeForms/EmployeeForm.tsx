@@ -2,25 +2,31 @@ import React, { useEffect } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-import { allStates, employeeForm, reducer } from "../../Interfaces/interfaces";
+import {
+  dataStates,
+  employeeData,
+  reducer,
+  responseData,
+} from "../../Interfaces/interfaces";
 import { createEmployee, updateEmployee } from "../../store/employeeCrud";
 import { useAppDispatch } from "../../store/hooks";
 
 export const EmployeeForm: React.FC<{
-  departments: { department: string }[];
-  employeeForm?: employeeForm | undefined;
-}> = ({ departments, employeeForm }): JSX.Element => {
+  departments: responseData["departments"];
+  employeeData?: employeeData | undefined;
+}> = ({ departments, employeeData }): JSX.Element => {
+  console.log(departments, employeeData);
   const departmentOptions: JSX.Element[] = [];
 
   const dispatch = useAppDispatch();
 
-  departments.forEach((depObj) => {
+  departments?.forEach((depObj) => {
     departmentOptions.push(
       <option
-        value={depObj.department}
+        value={depObj.id}
         selected={
-          employeeForm != undefined
-            ? employeeForm.department == depObj.department
+          employeeData != undefined
+            ? employeeData.department == depObj.department
             : false
         }
       >
@@ -29,7 +35,7 @@ export const EmployeeForm: React.FC<{
     );
   });
 
-  const { singleEmployee }: allStates = useSelector((reducer: reducer) => {
+  const { singleEmployee }: dataStates = useSelector((reducer: reducer) => {
     return reducer.employeeCrud;
   });
 
@@ -56,23 +62,23 @@ export const EmployeeForm: React.FC<{
         const target = event.target as typeof event.target & {
           name: { value: string };
           salary: { value: number };
-          department: { value: string };
+          department: { value: number };
         };
 
-        employeeForm == undefined
+        employeeData == undefined
           ? dispatch(
               createEmployee({
                 name: target.name.value,
                 salary: target.salary.value,
-                department: target.department.value,
+                departmentId: target.department.value,
               })
             )
           : dispatch(
               updateEmployee({
-                id: employeeForm.id,
+                id: employeeData.id,
                 name: target.name.value,
                 salary: target.salary.value,
-                department: target.department.value,
+                departmentId: target.department.value,
               })
             );
       }}
@@ -90,7 +96,7 @@ export const EmployeeForm: React.FC<{
             required={true}
             name="name"
             defaultValue={
-              employeeForm != undefined ? employeeForm.name : employeeForm
+              employeeData != undefined ? employeeData.name : employeeData
             }
           />
         </Row>
@@ -101,7 +107,7 @@ export const EmployeeForm: React.FC<{
             id="employee-salary"
             required={true}
             name="salary"
-            defaultValue={employeeForm != undefined ? employeeForm.salary : ""}
+            defaultValue={employeeData != undefined ? employeeData.salary : ""}
           />
         </Row>
         <Row

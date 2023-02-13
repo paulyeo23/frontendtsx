@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { useRedirect } from "react-admin";
 import { useSelector } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
-import {
-  employeeForm,
-  employeeData,
-  reducer,
-  allStates,
-} from "../../Interfaces/interfaces";
+import { useParams } from "react-router-dom";
+import { employeeData, reducer, dataStates } from "../../Interfaces/interfaces";
 import { EmployeeForm } from "./EmployeeForm";
 import "./employeeForm.css";
 
 export const EmployeePage = () => {
   const [Render, setRender] = useState<JSX.Element>(<div></div>);
   const { employeeId, employeeName } = useParams();
+  console.log(
+    useSelector((reducer: reducer) => {
+      return reducer;
+    })
+  );
 
-  const allStates: allStates = useSelector((reducer: reducer) => {
+  const dataStates: dataStates = useSelector((reducer: reducer) => {
     return reducer.employeeCrud;
   });
 
   let redirect = useRedirect();
 
-  const departments = allStates.departments;
+  const departments = dataStates.departments;
 
   const nameToUrl = (name: string) => {
     name = name.replace(/\W+(?!$)/g, "-").toLowerCase();
@@ -31,33 +31,35 @@ export const EmployeePage = () => {
   useEffect(() => {
     if (
       departments.response?.data?.departments != undefined &&
-      allStates.employees?.response?.data.employees != undefined
+      dataStates.employees?.response?.data.employees != undefined
     ) {
-      const employeeForm: employeeForm | undefined =
-        allStates.employees.response.data.employees.filter((employee) => {
+      const employeeData: employeeData | undefined =
+        dataStates.employees.response.data.employees.filter((employee) => {
           return employee.id == Number(employeeId);
         })[0];
 
-      if (employeeForm == undefined) {
+      if (employeeData == undefined) {
         redirect("/employee/");
-      } else if (nameToUrl(employeeForm.name) != employeeName) {
+      } else if (nameToUrl(employeeData.name) != employeeName) {
         redirect(
-          `/employee/${employeeForm.id}/${nameToUrl(employeeForm.name)}`
+          `/employee/${employeeData.id}/${nameToUrl(employeeData.name)}`
         );
       }
+
+      console.log(employeeData);
 
       setRender(
         <div className="d-flex align-items-center justify-content-center">
           <EmployeeForm
             {...{
               departments: departments.response.data.departments,
-              employeeForm: employeeForm,
+              employeeData,
             }}
           />
         </div>
       );
     }
-  }, [allStates]);
+  }, [dataStates]);
 
   return Render;
 };

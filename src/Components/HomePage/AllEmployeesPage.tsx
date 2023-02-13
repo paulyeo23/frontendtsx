@@ -1,11 +1,5 @@
 import { Container, Row, Col } from "react-bootstrap";
-import {
-  allStates,
-  employeeList,
-  employeeData,
-  pageState,
-  reducer,
-} from "../../Interfaces/interfaces";
+import { dataStates, pageState, reducer } from "../../Interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Pages from "./Pagination";
@@ -16,7 +10,7 @@ import { EmployeeDetailsModal } from "./EmployeeCells/EmployeeModal";
 export const AllEmployeesPage = () => {
   const [Render, setRender] = useState<JSX.Element>(<div></div>);
 
-  const state: allStates = useSelector((reducer: reducer) => {
+  const state: dataStates = useSelector((reducer: reducer) => {
     return reducer.employeeCrud;
   });
 
@@ -28,7 +22,7 @@ export const AllEmployeesPage = () => {
 
   useEffect(() => {
     if (employees.response?.data.employees != undefined) {
-      const employeeCell = employees.response.data.employees.slice(
+      const employeeCells = employees.response.data.employees.slice(
         (pageState.currentPage - 1) * 10,
         pageState.currentPage * 10
       );
@@ -37,7 +31,7 @@ export const AllEmployeesPage = () => {
         <div>
           <EmployeeDetailsModal />
           <DeleteEmployeeModal />
-          <EmployeeCellContainer employeeData={employeeCell} />
+          <EmployeeCellContainer employeeData={employeeCells} />
           <Pages employeeCount={employees.response.data.employees.length} />
         </div>
       );
